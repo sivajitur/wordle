@@ -24,8 +24,26 @@ nyt_rem_accept <- old_accept[!(old_accept %in% nyt_accept)]
 wordle_rem_soln <- nyt_wordle_soln[!(nyt_wordle_soln %in% old_wordle_soln)]
 wordle_rem_accept <- nyt_accept[!(nyt_accept %in% old_accept)]
 
-word <- function(input) {
+word <- function(date) {
   dodge_num <- which(nyt_wordle_soln == "dodge")
   dodge_day <- as.numeric(as.Date("2022-02-18"))
-  nyt_wordle_soln[as.numeric(as.Date(input)) - dodge_day + dodge_num]
+  nyt_wordle_soln[as.numeric(as.Date(date)) - dodge_day + dodge_num]
+}
+
+date <- function(word) {
+  if (!(word %in% nyt_wordle_soln)) {
+    message("Word not found in NYT List of Solutions")
+  } else {
+    index <- which(nyt_wordle_soln == word)
+    dodge_num <- which(nyt_wordle_soln == "dodge")
+    dodge_day <- as.numeric(as.Date("2022-02-18"))
+    
+    out <- as.Date("2022-02-18")
+    if (index < dodge_num) {
+      out <- as.Date("2022-02-18") - (dodge_num - index)
+    } else if (index > dodge_num) {
+      out <- as.Date("2022-02-18") + (index - dodge_num)
+    }
+    out
+  }
 }
